@@ -17,9 +17,9 @@ usersRouter.get('/search', async (req, res, next) => {
     }
 });
 
-usersRouter.get('/', async (req, res, next) => {
+usersRouter.get('/:id?', async (req, res, next) => {
     try {
-        const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
+        const keycloak_id = req.params.id || req['kauth']?.grant?.access_token?.content?.sub;
         const result = await getUserById(keycloak_id);
         res.status(StatusCodes.OK).send(result);
     } catch (e) {
