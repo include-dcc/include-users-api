@@ -9,6 +9,20 @@ const sanitizeInputPayload = (payload: IUserInput) => {
     return rest;
 };
 
+const cleanedUserAttributes = [
+    'id',
+    'keycloak_id',
+    'first_name',
+    'last_name',
+    'roles',
+    'portal_usages',
+    'creation_date',
+    'updated_date',
+    'email',
+    'commercial_use_reason',
+    'linkedin',
+];
+
 export const searchUsers = async ({
     pageSize,
     pageIndex,
@@ -58,19 +72,7 @@ export const searchUsers = async ({
     }
 
     const results = await UserModel.findAndCountAll({
-        attributes: [
-            'id',
-            'keycloak_id',
-            'first_name',
-            'last_name',
-            'roles',
-            'portal_usages',
-            'creation_date',
-            'updated_date',
-            'email',
-            'commercial_use_reason',
-            'linkedin'
-        ],
+        attributes: cleanedUserAttributes,
         limit: pageSize,
         offset: pageIndex * pageSize,
         order: sorts,
@@ -88,8 +90,16 @@ export const searchUsers = async ({
     };
 };
 
-export const getUserById = async (keycloak_id: string): Promise<IUserOuput> => {
+export const getUserById = async (keycloak_id: string, isOwn: boolean): Promise<IUserOuput> => {
+    let attributesClause = {};
+    if (!isOwn) {
+        attributesClause = {
+            attributes: cleanedUserAttributes,
+        };
+    }
+
     const user = await UserModel.findOne({
+        ...attributesClause,
         where: {
             keycloak_id,
         },

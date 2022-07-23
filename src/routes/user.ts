@@ -60,8 +60,13 @@ usersRouter.get(
 
 usersRouter.get('/:id?', async (req, res, next) => {
     try {
-        const keycloak_id = req.params.id || req['kauth']?.grant?.access_token?.content?.sub;
-        const result = await getUserById(keycloak_id);
+        const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
+        const requestKeycloakId = req.params.id;
+
+        const result = await getUserById(
+            requestKeycloakId ?? keycloak_id,
+            requestKeycloakId ? requestKeycloakId === keycloak_id : true,
+        );
         res.status(StatusCodes.OK).send(result);
     } catch (e) {
         next(e);
