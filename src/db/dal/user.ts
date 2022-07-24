@@ -21,6 +21,7 @@ const cleanedUserAttributes = [
     'email',
     'commercial_use_reason',
     'linkedin',
+    'affiliation'
 ];
 
 export const searchUsers = async ({
