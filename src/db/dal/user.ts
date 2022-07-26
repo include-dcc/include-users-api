@@ -18,7 +18,7 @@ const cleanedUserAttributes = [
     'portal_usages',
     'creation_date',
     'updated_date',
-    'email',
+    'public_email',
     'commercial_use_reason',
     'linkedin',
     'affiliation'
