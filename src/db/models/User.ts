@@ -10,6 +10,7 @@ interface IUserAttributes {
     nih_ned_id?: string;
     email?: string;
     linkedin?: string;
+    public_email?: string;
     external_individual_fullname?: string;
     external_individual_email?: string;
     roles?: string[];
@@ -62,6 +63,8 @@ UserModel.init(
         external_individual_email: DataTypes.TEXT,
         roles: DataTypes.ARRAY(DataTypes.TEXT),
         affiliation: DataTypes.TEXT,
+        public_email: DataTypes.TEXT,
+        linkedin: DataTypes.TEXT,
         portal_usages: DataTypes.ARRAY(DataTypes.TEXT),
         research_area: DataTypes.TEXT,
         creation_date: {
