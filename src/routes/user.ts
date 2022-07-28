@@ -1,5 +1,5 @@
 import { Request, Router } from 'express';
-import { completeRegistration, createUser, getUserById, updateUser, searchUsers } from '../db/dal/user';
+import { completeRegistration, createUser, getUserById, updateUser, searchUsers, deleteUser } from '../db/dal/user';
 import { StatusCodes } from 'http-status-codes';
 import { Order } from 'sequelize';
 
@@ -98,6 +98,16 @@ usersRouter.put('/complete-registration', async (req, res, next) => {
         const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
         const result = await completeRegistration(keycloak_id, req.body);
         res.status(StatusCodes.OK).send(result);
+    } catch (e) {
+        next(e);
+    }
+});
+
+usersRouter.delete('/', async (req, res, next) => {
+    try {
+        const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
+        await deleteUser(keycloak_id);
+        res.status(StatusCodes.OK).send({ success: true });
     } catch (e) {
         next(e);
     }

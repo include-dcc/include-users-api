@@ -1,8 +1,9 @@
 import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
-import { Op, Order, Sequelize } from 'sequelize';
+import { Op, Order } from 'sequelize';
 import { validateUserRegistrationPayload } from '../../utils/userValidator';
 import UserModel, { IUserInput, IUserOuput } from '../models/User';
+import { uuid } from 'uuidv4';
 
 const sanitizeInputPayload = (payload: IUserInput) => {
     const { id, keycloak_id, completed_registration, creation_date, ...rest } = payload;
@@ -21,7 +22,7 @@ const cleanedUserAttributes = [
     'public_email',
     'commercial_use_reason',
     'linkedin',
-    'affiliation'
+    'affiliation',
 ];
 
 export const searchUsers = async ({
@@ -154,6 +155,29 @@ export const updateUser = async (keycloak_id: string, payload: IUserInput): Prom
     );
 
     return results[1][0];
+};
+
+export const deleteUser = async (keycloak_id: string): Promise<void> => {
+    await UserModel.update(
+        {
+            keycloak_id: uuid(),
+            email: uuid(),
+            affiliation: uuid(),
+            public_email: uuid(),
+            nih_ned_id: uuid(),
+            era_commons_id: uuid(),
+            first_name: uuid(),
+            last_name: uuid(),
+            linkedin: uuid(),
+            external_individual_fullname: uuid(),
+            external_individual_email: uuid(),
+        },
+        {
+            where: {
+                keycloak_id,
+            },
+        },
+    );
 };
 
 export const completeRegistration = async (keycloak_id: string, payload: IUserInput): Promise<IUserOuput> => {
