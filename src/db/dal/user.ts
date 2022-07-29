@@ -80,6 +80,7 @@ export const searchUsers = async ({
         order: sorts,
         where: {
             completed_registration: true,
+            deleted: false,
             ...matchClauses,
             ...rolesClause,
             ...dataUsesClause,
@@ -104,6 +105,7 @@ export const getUserById = async (keycloak_id: string, isOwn: boolean): Promise<
         ...attributesClause,
         where: {
             keycloak_id,
+            deleted: false,
         },
     });
 
@@ -171,6 +173,7 @@ export const deleteUser = async (keycloak_id: string): Promise<void> => {
             linkedin: uuid(),
             external_individual_fullname: uuid(),
             external_individual_email: uuid(),
+            deleted: true,
         },
         {
             where: {

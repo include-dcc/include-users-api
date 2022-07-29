@@ -24,6 +24,7 @@ interface IUserAttributes {
     understand_disclaimer: boolean;
     commercial_use_reason?: string;
     completed_registration: boolean;
+    deleted: boolean;
     config?: any;
 }
 
@@ -39,6 +40,7 @@ class UserModel extends Model<IUserAttributes, IUserInput> implements IUserAttri
     public completed_registration!: boolean;
     public creation_date!: Date;
     public updated_date!: Date;
+    public deleted!: boolean;
 }
 
 UserModel.init(
@@ -52,6 +54,10 @@ UserModel.init(
         keycloak_id: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        deleted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
         first_name: DataTypes.STRING,
         last_name: DataTypes.STRING,
