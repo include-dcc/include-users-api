@@ -67,11 +67,11 @@ UserModel.init(
         email: DataTypes.STRING,
         external_individual_fullname: DataTypes.TEXT,
         external_individual_email: DataTypes.TEXT,
-        roles: DataTypes.ARRAY(DataTypes.TEXT),
+        roles: DataTypes.ARRAY(DataTypes.CITEXT),
         affiliation: DataTypes.TEXT,
         public_email: DataTypes.TEXT,
         linkedin: DataTypes.TEXT,
-        portal_usages: DataTypes.ARRAY(DataTypes.TEXT),
+        portal_usages: DataTypes.ARRAY(DataTypes.CITEXT),
         research_area: DataTypes.TEXT,
         creation_date: {
             type: DataTypes.DATE,
