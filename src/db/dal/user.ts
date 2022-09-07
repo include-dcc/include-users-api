@@ -1,9 +1,9 @@
 import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { Op, Order } from 'sequelize';
+import { uuid } from 'uuidv4';
 import { validateUserRegistrationPayload } from '../../utils/userValidator';
 import UserModel, { IUserInput, IUserOuput } from '../models/User';
-import { uuid } from 'uuidv4';
 
 const sanitizeInputPayload = (payload: IUserInput) => {
     const { id, keycloak_id, completed_registration, creation_date, ...rest } = payload;
@@ -55,22 +55,26 @@ export const searchUsers = async ({
         };
     }
 
-    let rolesClause = {};
+    let andClauses = [];
+
     if (roles.length) {
-        rolesClause = {
-            roles: {
-                [Op.overlap]: roles,
-            },
-        };
+        andClauses.push(
+            roles.map((role) => ({
+                roles: {
+                    [Op.contains]: [role.toLowerCase()],
+                },
+            })),
+        );
     }
 
-    let dataUsesClause = {};
     if (dataUses.length) {
-        dataUsesClause = {
-            portal_usages: {
-                [Op.overlap]: dataUses,
-            },
-        };
+        andClauses.push(
+            dataUses.map((use) => ({
+                portal_usages: {
+                    [Op.contains]: [use.toLowerCase()],
+                },
+            })),
+        );
     }
 
     const results = await UserModel.findAndCountAll({
@@ -79,11 +83,12 @@ export const searchUsers = async ({
         offset: pageIndex * pageSize,
         order: sorts,
         where: {
-            completed_registration: true,
-            deleted: false,
-            ...matchClauses,
-            ...rolesClause,
-            ...dataUsesClause,
+            [Op.and]: {
+                completed_registration: true,
+                deleted: false,
+                ...matchClauses,
+                [Op.and]: andClauses,
+            },
         },
     });
 
