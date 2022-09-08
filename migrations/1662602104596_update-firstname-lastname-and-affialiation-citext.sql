@@ -1,0 +1,9 @@
+-- Up Migration
+ALTER TABLE users ALTER COLUMN first_name TYPE CITEXT;
+ALTER TABLE users ALTER COLUMN last_name TYPE CITEXT;
+ALTER TABLE users ALTER COLUMN affiliation TYPE CITEXT;
+
+-- Down Migration
+ALTER TABLE users ALTER COLUMN first_name TYPE TEXT;
+ALTER TABLE users ALTER COLUMN last_name TYPE TEXT;
+ALTER TABLE users ALTER COLUMN affiliation TYPE TEXT;

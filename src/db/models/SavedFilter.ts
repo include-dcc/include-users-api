@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import sequelizeConnection from '../config';
 
 interface ISavedFilterAttributes {
-    id: number;
+    id: string;
     keycloak_id: string;
     title: string;
     tag: string;
@@ -16,7 +16,7 @@ export interface ISavedFilterInput extends ISavedFilterAttributes {}
 export interface ISavedFilterOutput extends ISavedFilterAttributes {}
 
 class SavedFilterModel extends Model<ISavedFilterAttributes, ISavedFilterInput> implements ISavedFilterAttributes {
-    public id!: number;
+    public id!: string;
     public keycloak_id!: string;
     public title!: string;
     public tag!: string;
@@ -29,9 +29,8 @@ class SavedFilterModel extends Model<ISavedFilterAttributes, ISavedFilterInput> 
 SavedFilterModel.init(
     {
         id: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.STRING,
             allowNull: false,
-            autoIncrement: true,
             primaryKey: true,
         },
         keycloak_id: {
