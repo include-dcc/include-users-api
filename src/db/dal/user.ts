@@ -10,6 +10,8 @@ const sanitizeInputPayload = (payload: IUserInput) => {
     return rest;
 };
 
+const otherKey = 'other';
+
 const cleanedUserAttributes = [
     'id',
     'keycloak_id',
@@ -56,25 +58,22 @@ export const searchUsers = async ({
     }
 
     let andClauses = [];
-
-    if (roles.length) {
-        andClauses.push(
-            roles.map((role) => ({
-                roles: {
-                    [Op.contains]: [role.toLowerCase()],
-                },
-            })),
-        );
+    const rolesWithoutOther = roles.filter((role) => role.toLowerCase() !== otherKey);
+    if (rolesWithoutOther.length) {
+        andClauses.push({
+            roles: {
+                [Op.contains]: rolesWithoutOther.map((role) => role.toLowerCase()),
+            },
+        });
     }
 
-    if (dataUses.length) {
-        andClauses.push(
-            dataUses.map((use) => ({
-                portal_usages: {
-                    [Op.contains]: [use.toLowerCase()],
-                },
-            })),
-        );
+    const dataUsesWithoutOther = dataUses.filter((use) => use.toLowerCase() !== otherKey);
+    if (dataUsesWithoutOther.length) {
+        andClauses.push({
+            roles: {
+                [Op.contains]: dataUsesWithoutOther.map((use) => use.toLowerCase()),
+            },
+        });
     }
 
     const results = await UserModel.findAndCountAll({
