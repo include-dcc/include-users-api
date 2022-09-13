@@ -1,7 +1,8 @@
 import { Request, Router } from 'express';
-import { completeRegistration, createUser, getUserById, updateUser, searchUsers, deleteUser } from '../db/dal/user';
+import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { Order } from 'sequelize';
+import { completeRegistration, createUser, deleteUser, getUserById, searchUsers, updateUser } from '../db/dal/user';
 
 // Handles requests made to /users
 const usersRouter = Router();
@@ -31,6 +32,8 @@ usersRouter.get(
                 match?: string;
                 roles?: string;
                 dataUses?: string;
+                roleOptions?: string;
+                usageOptions?: string;
             }
         >,
         res,
@@ -50,7 +53,23 @@ usersRouter.get(
                 });
             }
 
-            const result = await searchUsers({ pageSize, pageIndex, sorts, match: req.query.match, roles, dataUses });
+            const roleOptions = req.query.roleOptions ? req.query.roleOptions.split(',') : [];
+            const usageOptions = req.query.usageOptions ? req.query.usageOptions.split(',') : [];
+
+            if (!roleOptions.length || !roleOptions.length) {
+                throw createHttpError(StatusCodes.BAD_REQUEST, 'roleOptions and usageOptions array must be provided.');
+            }
+
+            const result = await searchUsers({
+                pageSize,
+                pageIndex,
+                sorts,
+                match: req.query.match,
+                roles,
+                dataUses,
+                roleOptions,
+                usageOptions,
+            });
             res.status(StatusCodes.OK).send(result);
         } catch (e) {
             next(e);
