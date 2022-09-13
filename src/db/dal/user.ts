@@ -34,6 +34,8 @@ export const searchUsers = async ({
     match,
     roles,
     dataUses,
+    roleOptions,
+    usageOptions
 }: {
     pageSize: number;
     pageIndex: number;
@@ -41,6 +43,8 @@ export const searchUsers = async ({
     match: string;
     roles: string[];
     dataUses: string[];
+    roleOptions: string[];
+    usageOptions: string[];
 }) => {
     let matchClauses = {};
     if (match) {
@@ -70,8 +74,28 @@ export const searchUsers = async ({
     const dataUsesWithoutOther = dataUses.filter((use) => use.toLowerCase() !== otherKey);
     if (dataUsesWithoutOther.length) {
         andClauses.push({
-            roles: {
+            portal_usages: {
                 [Op.contains]: dataUsesWithoutOther.map((use) => use.toLowerCase()),
+            },
+        });
+    }
+
+    if (dataUses.includes(otherKey)) {
+        andClauses.push({
+            [Op.not]: {
+                portal_usages: {
+                    [Op.contained]: usageOptions,
+                },
+            },
+        });
+    }
+
+    if (roles.includes(otherKey)) {
+        andClauses.push({
+            [Op.not]: {
+                roles: {
+                    [Op.contained]: roleOptions,
+                },
             },
         });
     }
