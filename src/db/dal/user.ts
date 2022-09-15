@@ -143,34 +143,6 @@ export const getProfileImageUploadPresignedUrl = async (keycloak_id: string) => 
     };
 };
 
-export const deleteProfileImage = async (keycloak_id: string): Promise<IUserOuput> => {
-    const request = S3Client.deleteObject({
-        Bucket: profileImageBucket,
-        Key: `${keycloak_id}.${profileImageExtension}`,
-    });
-
-    const s3Result = await request.promise();
-
-    if (s3Result.$response.error) {
-        throw createHttpError(StatusCodes.BAD_REQUEST, 'Unable to delete profile image.');
-    }
-
-    const results = await UserModel.update(
-        {
-            profile_image_key: null,
-            updated_date: new Date(),
-        },
-        {
-            where: {
-                keycloak_id,
-            },
-            returning: true,
-        },
-    );
-
-    return results[1][0];
-};
-
 export const getUserById = async (keycloak_id: string, isOwn: boolean): Promise<IUserOuput> => {
     let attributesClause = {};
     if (!isOwn) {

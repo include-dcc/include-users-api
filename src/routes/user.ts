@@ -5,7 +5,6 @@ import { Order } from 'sequelize';
 import {
     completeRegistration,
     createUser,
-    deleteProfileImage,
     deleteUser,
     getProfileImageUploadPresignedUrl,
     getUserById,
@@ -90,16 +89,6 @@ usersRouter.get('/image/presigned', async (req, res, next) => {
     try {
         const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
         const result = await getProfileImageUploadPresignedUrl(keycloak_id);
-        res.status(StatusCodes.OK).send(result);
-    } catch (e) {
-        next(e);
-    }
-});
-
-usersRouter.delete('/image', async (req, res, next) => {
-    try {
-        const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
-        const result = await deleteProfileImage(keycloak_id);
         res.status(StatusCodes.OK).send(result);
     } catch (e) {
         next(e);
