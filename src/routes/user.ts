@@ -99,8 +99,8 @@ usersRouter.get('/image/presigned', async (req, res, next) => {
 usersRouter.delete('/image', async (req, res, next) => {
     try {
         const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
-        await deleteProfileImage(keycloak_id);
-        res.status(StatusCodes.OK).send(true);
+        const result = await deleteProfileImage(keycloak_id);
+        res.status(StatusCodes.OK).send(result);
     } catch (e) {
         next(e);
     }
