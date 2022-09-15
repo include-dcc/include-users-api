@@ -129,14 +129,12 @@ export const searchUsers = async ({
 
 export const getProfileImageUploadPresignedUrl = async (keycloak_id: string) => {
     const s3Key = `${keycloak_id}.${profileImageExtension}`;
-
-    console.log(profileImageBucket);
-    console.log(s3Key);
-
     const presignUrl = S3Client.getSignedUrl('putObject', {
         Bucket: profileImageBucket,
         Key: s3Key,
         Expires: 60 * 5,
+        ContentType: 'image/jpeg',
+        ACL: 'public-read',
     });
 
     return {

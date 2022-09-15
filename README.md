@@ -23,6 +23,12 @@
 
 - Run DB migration: `npm run migrate up`
 
+- In order for AWS Profile Image upload to work you will need to export your Include profile before starting the server using the following:
+
+```
+export AWS_PROFILE=XXX
+```
+
 - Start server: `npm run dev`
 
 - Any changes to the api will automatically refresh it.
