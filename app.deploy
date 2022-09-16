@@ -7,7 +7,7 @@ deploy {
     environments = "qa,prd"
     docker_image_type = "alpine"
     internal_app = "false"
-    create_default_iam_role = "1"
+    create_default_iam_role = "0"
     entrypoint_command = "npm run start:prd"
     deploy_scripts_version = "master"
     container_port = "443"
