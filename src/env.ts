@@ -8,6 +8,8 @@ export const keycloakURL = process.env.KEYCLOAK_URL;
 export const keycloakRealm = process.env.KEYCLOAK_REALM;
 export const keycloakClient = process.env.KEYCLOAK_CLIENT;
 
+export const profileImageBucket = process.env.PROFILE_IMAGE_BUCKET;
+
 export const dbHost = process.env.DATABASE_HOST;
 export const dbPort: number = Number.parseInt(process.env.DATABASE_PORT);
 export const dbName = process.env.DATABASE_NAME;

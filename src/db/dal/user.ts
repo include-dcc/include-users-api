@@ -1,9 +1,13 @@
+import AWS from 'aws-sdk';
 import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { Op, Order } from 'sequelize';
 import { uuid } from 'uuidv4';
+import { profileImageBucket } from '../../env';
 import { validateUserRegistrationPayload } from '../../utils/userValidator';
 import UserModel, { IUserInput, IUserOuput } from '../models/User';
+
+const S3Client = new AWS.S3();
 
 const sanitizeInputPayload = (payload: IUserInput) => {
     const { id, keycloak_id, completed_registration, creation_date, ...rest } = payload;
@@ -11,6 +15,7 @@ const sanitizeInputPayload = (payload: IUserInput) => {
 };
 
 const otherKey = 'other';
+const profileImageExtension = 'jpeg';
 
 const cleanedUserAttributes = [
     'id',
@@ -25,6 +30,7 @@ const cleanedUserAttributes = [
     'commercial_use_reason',
     'linkedin',
     'affiliation',
+    'profile_image_key',
 ];
 
 export const searchUsers = async ({
@@ -35,7 +41,7 @@ export const searchUsers = async ({
     roles,
     dataUses,
     roleOptions,
-    usageOptions
+    usageOptions,
 }: {
     pageSize: number;
     pageIndex: number;
@@ -118,6 +124,22 @@ export const searchUsers = async ({
     return {
         users: results.rows,
         total: results.count,
+    };
+};
+
+export const getProfileImageUploadPresignedUrl = async (keycloak_id: string) => {
+    const s3Key = `${keycloak_id}.${profileImageExtension}`;
+    const presignUrl = S3Client.getSignedUrl('putObject', {
+        Bucket: profileImageBucket,
+        Key: s3Key,
+        Expires: 60 * 5,
+        ContentType: 'image/jpeg',
+        ACL: 'public-read',
+    });
+
+    return {
+        s3Key,
+        presignUrl,
     };
 };
 

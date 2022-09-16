@@ -13,6 +13,7 @@ interface IUserAttributes {
     public_email?: string;
     external_individual_fullname?: string;
     external_individual_email?: string;
+    profile_image_key?: string;
     roles?: string[];
     affiliation?: string;
     portal_usages?: string[];
@@ -73,6 +74,7 @@ UserModel.init(
         linkedin: DataTypes.TEXT,
         portal_usages: DataTypes.ARRAY(DataTypes.CITEXT),
         research_area: DataTypes.TEXT,
+        profile_image_key: DataTypes.TEXT,
         creation_date: {
             type: DataTypes.DATE,
             defaultValue: new Date(),

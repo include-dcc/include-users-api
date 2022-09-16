@@ -2,7 +2,15 @@ import { Request, Router } from 'express';
 import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { Order } from 'sequelize';
-import { completeRegistration, createUser, deleteUser, getUserById, searchUsers, updateUser } from '../db/dal/user';
+import {
+    completeRegistration,
+    createUser,
+    deleteUser,
+    getProfileImageUploadPresignedUrl,
+    getUserById,
+    searchUsers,
+    updateUser
+} from '../db/dal/user';
 
 // Handles requests made to /users
 const usersRouter = Router();
@@ -76,6 +84,16 @@ usersRouter.get(
         }
     },
 );
+
+usersRouter.get('/image/presigned', async (req, res, next) => {
+    try {
+        const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
+        const result = await getProfileImageUploadPresignedUrl(keycloak_id);
+        res.status(StatusCodes.OK).send(result);
+    } catch (e) {
+        next(e);
+    }
+});
 
 usersRouter.get('/:id?', async (req, res, next) => {
     try {
