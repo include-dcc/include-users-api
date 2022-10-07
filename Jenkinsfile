@@ -1,7 +1,6 @@
 @Library(value="kids-first/aws-infra-jenkins-shared-libraries", changelog=false) _
 deploy {
     architecture_type       = "aws-ecs-service-type-1"
-    jenkinsfile_name        = "app.deploy" 
     prd_cidr                = "0.0.0.0/0"
     projectName             = "kf-users-api"
     environments            = "qa,prd"
