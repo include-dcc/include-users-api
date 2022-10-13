@@ -29,6 +29,7 @@ UserSetModel.init(
         id: {
             type: DataTypes.STRING,
             allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         keycloak_id: {
