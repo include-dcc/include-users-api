@@ -3,6 +3,7 @@ import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { Op, Order } from 'sequelize';
 import { uuid } from 'uuidv4';
+
 import { profileImageBucket } from '../../env';
 import { validateUserRegistrationPayload } from '../../utils/userValidator';
 import UserModel, { IUserInput, IUserOuput } from '../models/User';
@@ -67,7 +68,7 @@ export const searchUsers = async ({
         };
     }
 
-    let andClauses = [];
+    const andClauses = [];
     const rolesWithoutOther = roles.filter((role) => role.toLowerCase() !== otherKey);
     if (rolesWithoutOther.length) {
         andClauses.push({
@@ -257,3 +258,58 @@ export const completeRegistration = async (keycloak_id: string, payload: IUserIn
 
     return results[1][0];
 };
+
+export const updateRolesAndDataUsages = async (): Promise<void> => {
+    const results = await UserModel.findAll();
+
+    results.forEach(async (user) => {
+        await UserModel.update(
+            {
+                ...user,
+                updated_date: new Date(),
+                roles: replaceRoles(user.roles),
+                portal_usages: replacePortalUsages(user.portal_usages),
+            },
+            {
+                where: {
+                    keycloak_id: user.keycloak_id,
+                },
+                returning: true,
+            },
+        );
+    });
+};
+
+const replaceRoles = (roles: string[]): string[] =>
+    roles.map((role) => {
+        switch (role) {
+            case 'researcher at an academic or not-for-profit institution':
+                return 'researcher';
+            case 'representative from a for-profit or commercial entity':
+                return 'representative';
+            case 'tool or algorithm developer':
+                return 'developer';
+            case 'community member':
+                return 'community_member';
+            case 'federal employee':
+                return 'federal_employee';
+            default:
+                return role;
+        }
+    });
+
+const replacePortalUsages = (usages: string[]): string[] =>
+    usages.map((usage) => {
+        switch (usage) {
+            case 'learning more about down syndrome and its health outcomes, management, and/or treatment':
+                return 'learn_more_about_down_syndrome';
+            case 'helping me design a new research study':
+                return 'help_design_new_research_study';
+            case 'identifying datasets that I want to analyze':
+                return 'identifying_dataset';
+            case 'commercial purposes':
+                return 'commercial_purpose';
+            default:
+                return usage;
+        }
+    });

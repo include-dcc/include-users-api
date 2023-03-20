@@ -42,6 +42,8 @@ class UserModel extends Model<IUserAttributes, IUserInput> implements IUserAttri
     public creation_date!: Date;
     public updated_date!: Date;
     public deleted!: boolean;
+    public roles!: string[];
+    public portal_usages!: string[];
 }
 
 UserModel.init(
