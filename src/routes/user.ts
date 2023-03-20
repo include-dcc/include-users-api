@@ -2,6 +2,7 @@ import { Request, Router } from 'express';
 import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { Order } from 'sequelize';
+
 import {
     completeRegistration,
     createUser,
@@ -9,7 +10,8 @@ import {
     getProfileImageUploadPresignedUrl,
     getUserById,
     searchUsers,
-    updateUser
+    updateRolesAndDataUsages,
+    updateUser,
 } from '../db/dal/user';
 
 // Handles requests made to /users
@@ -144,6 +146,15 @@ usersRouter.delete('/', async (req, res, next) => {
     try {
         const keycloak_id = req['kauth']?.grant?.access_token?.content?.sub;
         await deleteUser(keycloak_id);
+        res.status(StatusCodes.OK).send({ success: true });
+    } catch (e) {
+        next(e);
+    }
+});
+
+usersRouter.put('/updateRolesAndDataUsages', async (req, res, next) => {
+    try {
+        await updateRolesAndDataUsages();
         res.status(StatusCodes.OK).send({ success: true });
     } catch (e) {
         next(e);
