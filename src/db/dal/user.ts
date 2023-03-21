@@ -267,8 +267,8 @@ export const updateRolesAndDataUsages = async (): Promise<void> => {
             {
                 ...user,
                 updated_date: new Date(),
-                roles: replaceRoles(user.roles),
-                portal_usages: replacePortalUsages(user.portal_usages),
+                roles: replaceRoles(user.roles || []),
+                portal_usages: replacePortalUsages(user.portal_usages || []),
             },
             {
                 where: {
