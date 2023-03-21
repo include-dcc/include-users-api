@@ -282,7 +282,7 @@ export const updateRolesAndDataUsages = async (): Promise<void> => {
 
 const replaceRoles = (roles: string[]): string[] =>
     roles.map((role) => {
-        switch (role) {
+        switch (role.toLocaleLowerCase()) {
             case 'researcher at an academic or not-for-profit institution':
                 return 'researcher';
             case 'representative from a for-profit or commercial entity':
@@ -300,12 +300,15 @@ const replaceRoles = (roles: string[]): string[] =>
 
 const replacePortalUsages = (usages: string[]): string[] =>
     usages.map((usage) => {
-        switch (usage) {
+        switch (usage.toLocaleLowerCase()) {
             case 'learning more about down syndrome and its health outcomes, management, and/or treatment':
+            case 'learn more about down syndrome and its health outcomes, management, and/or treatment':
                 return 'learn_more_about_down_syndrome';
             case 'helping me design a new research study':
+            case 'help me design a new research study':
                 return 'help_design_new_research_study';
-            case 'identifying datasets that I want to analyze':
+            case 'identifying datasets that i want to analyze':
+            case 'identify datasets that i want to analyze':
                 return 'identifying_dataset';
             case 'commercial purposes':
                 return 'commercial_purpose';
