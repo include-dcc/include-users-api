@@ -7,6 +7,7 @@ export const port = process.env.PORT || 1212;
 export const keycloakURL = process.env.KEYCLOAK_URL;
 export const keycloakRealm = process.env.KEYCLOAK_REALM;
 export const keycloakClient = process.env.KEYCLOAK_CLIENT;
+export const keycloakPublicKey = process.env.KEYCLOAK_PUBLIC_KEY;
 
 export const profileImageBucket = process.env.PROFILE_IMAGE_BUCKET;
 

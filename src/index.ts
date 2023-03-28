@@ -30,6 +30,7 @@ k.grantManager.validateGrant = (grant) =>
         console.error('Grant Validation Error', err);
         throw err;
     });
+console.log((keycloak as any).config);
 app.listen(port, async () => {
     // eslint-disable-next-line no-console
     console.log(`⚡️ Listening on port ${port} ⚡️`);
